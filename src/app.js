@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import api from './routes';
+import config_passport from './config/passport';
 
 dotenv.config();
 const APP = express();
@@ -13,14 +14,9 @@ var db = mongoose.connection;
 db.on('error', function() {});
 db.once('open', function() {});
 APP.use(bodyParser.json());
-
-require('./config/passport')(passport);
-
+config_passport(passport);
 ROUTER.use('/api', api);
 APP.use(ROUTER);
-
 const PORT = process.env.PORT || 4100;
-
 APP.listen(PORT, () => {});
-
 export default APP;

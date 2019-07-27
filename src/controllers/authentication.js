@@ -1,10 +1,9 @@
-var passport = require('passport');
-var mongoose = require('mongoose');
-var User = mongoose.model('User');
+import passport from 'passport';
+import mongoose from 'mongoose';
 
-module.exports.register = function(req, res, next) {
+const register = function(req, res) {
+  let User = mongoose.model('User');
   var user = new User();
-  console.log(req.body)
   user.email = req.body.email;
   user.setPassword(req.body.password);
   user.save(function(err) {
@@ -16,7 +15,7 @@ module.exports.register = function(req, res, next) {
   });
 };
 
-module.exports.login = function(req, res) {
+const login = function(req, res) {
   passport.authenticate('local', function(err, user, info) {
     var token;
     if (err) {
@@ -30,7 +29,6 @@ module.exports.login = function(req, res) {
         token: token
       });
     } else {
-      // If user is not found
       res.status(401).json(info);
     }
   })(req, res);
@@ -42,3 +40,5 @@ module.exports.login = function(req, res) {
 //   req.flash('success_msg', 'You are logged out');
 //   res.redirect('/users/login');
 // });
+
+export { login, register };

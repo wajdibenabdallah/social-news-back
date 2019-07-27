@@ -1,9 +1,9 @@
-const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/User');
+import { Strategy } from 'passport-local';
+import User from '../models/User';
 
-module.exports = function(passport) {
+export default function(passport) {
   passport.use(
-    new LocalStrategy(
+    new Strategy(
       {
         usernameField: 'email'
       },
@@ -17,14 +17,10 @@ module.exports = function(passport) {
               return done(err);
             }
             if (!user) {
-              return done(null, false, {
-                message: 'User not found'
-              });
+              return done(null, false, { message: 'User not found' });
             }
             if (!user.validPassword(password)) {
-              return done(null, false, {
-                message: 'Password is wrong'
-              });
+              return done(null, false, { message: 'Password is wrong' });
             }
             return done(null, user);
           }
@@ -32,4 +28,4 @@ module.exports = function(passport) {
       }
     )
   );
-};
+}

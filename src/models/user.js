@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 mongoose.set('debug', true);
 
-var userSchema = new mongoose.Schema({
+let userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
@@ -42,6 +42,4 @@ userSchema.methods.generateJwt = function() {
   ); // DO NOT KEEP YOUR SECRET IN THE CODE!
 };
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;
+export default mongoose.model('User', userSchema);
