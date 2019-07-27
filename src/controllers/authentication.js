@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 const register = function(req, res) {
   let User = mongoose.model('User');
-  var user = new User();
+  let user = new User();
   user.email = req.body.email;
   user.setPassword(req.body.password);
   user.save(function(err) {
@@ -17,7 +17,7 @@ const register = function(req, res) {
 
 const login = function(req, res) {
   passport.authenticate('local', function(err, user, info) {
-    var token;
+    let token;
     if (err) {
       res.status(404).json(err);
       return;

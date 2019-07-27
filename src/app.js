@@ -10,7 +10,7 @@ dotenv.config();
 const APP = express();
 const ROUTER = express.Router();
 mongoose.connect('mongodb://localhost:27017/testapp');
-var db = mongoose.connection;
+let db = mongoose.connection;
 db.on('error', function() {});
 db.once('open', function() {});
 APP.use(bodyParser.json());
