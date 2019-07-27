@@ -1,13 +1,13 @@
 import passport from 'passport';
 import mongoose from 'mongoose';
 
-const register = function(req, res) {
+const register = function(req, res, next) {
   let User = mongoose.model('User');
   let user = new User();
   user.email = req.body.email;
   user.setPassword(req.body.password);
   user.save(function(err) {
-    if (err) throw err;
+    if (err) return next(err);
     res.json({
       token: user.generateJwt(),
       user: user

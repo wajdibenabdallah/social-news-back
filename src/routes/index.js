@@ -10,8 +10,8 @@ ROUTER.post('/login', (req, res, next) => {
   API.login(req, res, next)
 });
 
-ROUTER.post('/register', (req, res) => {
-  API.register(req, res);
+ROUTER.post('/register', (req, res, next) => {
+  API.register(req, res, next);
 });
 
 export default ROUTER;
