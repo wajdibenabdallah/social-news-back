@@ -1,12 +1,13 @@
 import passport from 'passport';
 import mongoose from 'mongoose';
 
-const register = function(req, res, next) {
+// register
+const register = (req, res, next) => {
   let User = mongoose.model('User');
   let user = new User();
   user.email = req.body.email;
   user.setPassword(req.body.password);
-  user.save(function(err) {
+  user.save(err => {
     if (err) return next(err);
     res.json({
       token: user.generateJwt(),
@@ -15,8 +16,9 @@ const register = function(req, res, next) {
   });
 };
 
-const login = function(req, res) {
-  passport.authenticate('local', function(err, user, info) {
+// login
+const login = (req, res) => {
+  passport.authenticate('local', (err, user, info) => {
     let token;
     if (err) {
       res.status(404).json(err);
@@ -34,11 +36,10 @@ const login = function(req, res) {
   })(req, res);
 };
 
-// // Logout
-// router.get('/logout', (req, res) => {
-//   req.logout();
-//   req.flash('success_msg', 'You are logged out');
-//   res.redirect('/users/login');
-// });
+// logout
+const logout = (req, res) => {
+  req.logout();
+  res.send('logout');
+};
 
-export { login, register };
+export { login, register, logout };

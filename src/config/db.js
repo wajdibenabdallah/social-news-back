@@ -1,3 +1,3 @@
-module.exports = {
-  url: 'localhost:27017/myAppDataBase'
+export default {
+  url: 'mongodb://localhost:27017/myAppDataBase'
 };

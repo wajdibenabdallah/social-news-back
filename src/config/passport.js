@@ -7,12 +7,12 @@ export default function(passport) {
       {
         usernameField: 'email'
       },
-      function(username, password, done) {
+      (username, password, done) => {
         User.findOne(
           {
             email: username
           },
-          function(err, user) {
+          (err, user) => {
             if (err) {
               return done(err);
             }

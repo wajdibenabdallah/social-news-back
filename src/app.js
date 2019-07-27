@@ -5,14 +5,15 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import api from './routes';
 import config_passport from './config/passport';
+import config_db from './config/db';
 
 dotenv.config();
 const APP = express();
 const ROUTER = express.Router();
-mongoose.connect('mongodb://localhost:27017/testapp');
+mongoose.connect(config_db.url);
 let db = mongoose.connection;
-db.on('error', function() {});
-db.once('open', function() {});
+db.on('error', () => {});
+db.once('open', () => {});
 APP.use(bodyParser.json());
 config_passport(passport);
 ROUTER.use('/api', api);
