@@ -14,7 +14,6 @@ const ROUTER = express.Router();
 let databaseName;
 if (process.env.NODE_ENV === 'dev') databaseName = config_db.dev.url;
 else databaseName = config_db.test.url;
-
 mongoose.connect(databaseName, { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
 mongoose.set('debug', true);
@@ -23,7 +22,7 @@ let db = mongoose.connection;
 db.on('error', () => {});
 db.once('open', () => {});
 APP.use(bodyParser.json());
-APP.use(session({ secret: 'aSecretKey' }));
+APP.use(session({ secret: 'secret' }));
 APP.use(passport.initialize());
 APP.use(passport.session());
 config_passport(passport);

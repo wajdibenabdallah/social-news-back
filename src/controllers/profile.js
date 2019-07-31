@@ -1,6 +1,6 @@
 // me
 const me = (req, res, next) => {
-  res.send(req.isAuthenticated());
+  res.json({ isAuthenticated: req.isAuthenticated() });
 };
 
 export { me };

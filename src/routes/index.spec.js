@@ -23,6 +23,11 @@ describe('API: Users', () => {
     });
   });
 
+  after(done => {
+    server.close();
+    done();
+  });
+
   describe('Test', () => {
     it('it /api/test', done => {
       chai
@@ -88,13 +93,17 @@ describe('API: Users', () => {
         .post('/api/login')
         .send(_user)
         .then(data => {
-          server.get('/api/me').end((err, res) => {
-            expect(err).to.be.null;
-            expect(res).to.have.status(200);
-            expect(res.body).to.be.true;
-          });
-          done();
-        });
+          console.log(data.body.token)
+          server
+            .get('/api/me')
+            .then(res => {
+              expect(res).to.have.status(200);
+              expect(res.body.isAuthenticated).to.be.true;
+              done();
+            })
+            .catch(error => done(error));
+        })
+        .catch(error => done(error));
     });
   });
 });
