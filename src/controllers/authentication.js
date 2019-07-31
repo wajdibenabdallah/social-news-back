@@ -37,7 +37,7 @@ const login = (req, res) => {
         res.status(200).json({ token: token });
       });
     } else {
-      res.status(401).json(info);
+      res.status(401).json({ info: info });
     }
   })(req, res);
 };

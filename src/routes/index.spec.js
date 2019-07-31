@@ -6,8 +6,18 @@ import APP from '../app';
 let expect = require('chai').expect;
 
 chai.use(chaiHttp);
+
+const _user = {
+    email: 'test1@gmail.com',
+    password: 'test1'
+  },
+  wrongEmail = 'test2@gmail.com',
+  wrongPassword = 'test2';
+
 describe('API: Users', () => {
+  let server;
   before(done => {
+    server = chai.request(APP).keepOpen();
     User.deleteMany({}, err => {
       done();
     });
@@ -26,17 +36,8 @@ describe('API: Users', () => {
     });
   });
 
-  describe('Register and Login', () => {
-    const email1 = 'test1@gmail.com',
-      email2 = 'test2@gmail.com',
-      password1 = 'test1',
-      password2 = 'test2',
-      _user = {
-        email: email1,
-        password: password1
-      };
+  describe('Register, Login, Logout', () => {
     it('it /api/register then /api/login: success', done => {
-      let server = chai.request(APP);
       Promise.all([
         server.post('/api/register').send(_user),
         server.post('/api/login').send(_user)
@@ -52,38 +53,48 @@ describe('API: Users', () => {
         .catch(error => done(error));
     });
     it('it /api/register then /api/login: failure: Password is wrong', done => {
-      let server = chai.request(APP);
       server
         .post('/api/login')
         .send({
           ..._user,
-          password: password2
+          password: wrongPassword
         })
 
         .then(data => {
-          expect(data.body).to.have.property('message');
-          expect(data.body.message).to.be.equal('Password is wrong');
+          expect(data.body.info).to.have.property('message');
+          expect(data.body.info.message).to.be.equal('Password is wrong');
           expect(data.statusCode).to.be.equal(401);
           done();
         })
         .catch(error => done(error));
     });
     it('it /api/register then /api/login: failure: User not found', done => {
-      let server = chai.request(APP);
       server
         .post('/api/login')
         .send({
           ..._user,
-          email: email2
+          email: wrongEmail
         })
-
         .then(data => {
-          expect(data.body).to.have.property('message');
-          expect(data.body.message).to.be.equal('User not found');
+          expect(data.body.info).to.have.property('message');
+          expect(data.body.info.message).to.be.equal('User not found');
           expect(data.statusCode).to.be.equal(401);
           done();
         })
         .catch(error => done(error));
+    });
+    it('it isAuthenticated is true after login, false after logout', done => {
+      server
+        .post('/api/login')
+        .send(_user)
+        .then(data => {
+          server.get('/api/me').end((err, res) => {
+            expect(err).to.be.null;
+            expect(res).to.have.status(200);
+            expect(res.body).to.be.true;
+          });
+          done();
+        });
     });
   });
 });
