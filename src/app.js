@@ -6,6 +6,7 @@ import passport from 'passport';
 import api from './routes';
 import config_passport from './config/passport';
 import * as config_db from './config/db';
+import session from 'express-session';
 
 dotenv.config();
 const APP = express();
@@ -22,6 +23,9 @@ let db = mongoose.connection;
 db.on('error', () => {});
 db.once('open', () => {});
 APP.use(bodyParser.json());
+APP.use(session({ secret: 'aSecretKey' }));
+APP.use(passport.initialize());
+APP.use(passport.session());
 config_passport(passport);
 ROUTER.use('/api', api);
 APP.use(ROUTER);
