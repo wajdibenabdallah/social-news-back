@@ -93,7 +93,6 @@ describe('API: Users', () => {
         .post('/api/login')
         .send(_user)
         .then(data => {
-          console.log(data.body.token)
           server
             .get('/api/me')
             .then(res => {

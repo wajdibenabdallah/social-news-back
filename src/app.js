@@ -11,10 +11,16 @@ import session from 'express-session';
 dotenv.config();
 const APP = express();
 const ROUTER = express.Router();
-let databaseName;
-if (process.env.NODE_ENV === 'dev') databaseName = config_db.dev.url;
-else databaseName = config_db.test.url;
-mongoose.connect(databaseName, { useNewUrlParser: true });
+let DATABASE;
+let PORT;
+if (process.env.NODE_ENV === 'dev') {
+  DATABASE = config_db.dev.url;
+  PORT = process.env.PORT || 4100;
+} else {
+  DATABASE = config_db.test.url;
+  PORT = 5000 || 5100;
+}
+mongoose.connect(DATABASE, { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
 mongoose.set('debug', true);
 
@@ -28,6 +34,5 @@ APP.use(passport.session());
 config_passport(passport);
 ROUTER.use('/api', api);
 APP.use(ROUTER);
-const PORT = process.env.PORT || 4100;
 APP.listen(PORT, () => {});
 export default APP;
