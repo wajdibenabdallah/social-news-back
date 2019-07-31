@@ -8,12 +8,12 @@ ROUTER.use('/test', (_, res) => {
   res.send('success ...');
 });
 
-ROUTER.post('/login', (req, res, next) => {
-  AUTH.login(req, res, next);
+ROUTER.post('/login', (req, res) => {
+  AUTH.login(req, res);
 });
 
-ROUTER.post('/register', (req, res, next) => {
-  AUTH.register(req, res, next);
+ROUTER.post('/register', (req, res) => {
+  AUTH.register(req, res);
 });
 
 ROUTER.post('/logout', (req, res) => {
