@@ -5,7 +5,9 @@ import * as PROFILE from '../controllers/profile';
 const ROUTER = express.Router();
 
 ROUTER.use('/test', (_, res) => {
-  res.send('success ...');
+  res.status(200).send({
+    result: true
+  });
 });
 
 ROUTER.post('/login', (req, res) => {

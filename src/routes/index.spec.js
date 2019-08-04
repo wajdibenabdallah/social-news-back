@@ -31,14 +31,11 @@ describe('API: Users', () => {
 
   describe('Test', () => {
     it('it /api/test', done => {
-      chai
-        .request(APP)
-        .get('/api/test')
-        .end((err, res) => {
-          expect(res.statusCode).to.equal(200);
-          expect(res.text).to.equal('success ...');
-          done();
-        });
+      agent.get('/api/test').end((err, res) => {
+        expect(res.statusCode).to.equal(200);
+        expect(res.body.result).to.be.true;
+        done();
+      });
     });
   });
 
