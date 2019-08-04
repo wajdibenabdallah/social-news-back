@@ -7,7 +7,6 @@ import api from './routes';
 import config_passport from './config/passport';
 import * as config_db from './config/db';
 import session from 'express-session';
-
 dotenv.config();
 const APP = express();
 const ROUTER = express.Router();
@@ -28,7 +27,13 @@ let db = mongoose.connection;
 db.on('error', () => {});
 db.once('open', () => {});
 APP.use(bodyParser.json());
-APP.use(session({ secret: 'secret' }));
+APP.use(
+  session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+  })
+);
 APP.use(passport.initialize());
 APP.use(passport.session());
 config_passport(passport);

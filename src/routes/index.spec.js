@@ -13,18 +13,19 @@ const _user = {
   },
   wrongEmail = 'test2@gmail.com',
   wrongPassword = 'test2';
+let token;
 
 describe('API: Users', () => {
-  let server;
+  let agent;
   before(done => {
-    server = chai.request(APP).keepOpen();
+    agent = chai.request.agent(APP);
     User.deleteMany({}, err => {
       done();
     });
   });
 
   after(done => {
-    server.close();
+    agent.close();
     done();
   });
 
@@ -42,29 +43,37 @@ describe('API: Users', () => {
   });
 
   describe('Register, Login, Logout', () => {
-    it('it /api/register then /api/login: success', done => {
-      Promise.all([
-        server.post('/api/register').send(_user),
-        server.post('/api/login').send(_user)
-      ])
+    it('it /api/register', done => {
+      agent
+        .post('/api/register')
+        .send(_user)
         .then(data => {
-          expect(data[0].body).to.have.property('token');
-          expect(data[0].body).to.have.property('user');
-          expect(data[0].statusCode).to.be.equal(200);
-          expect(data[1].body).to.have.property('token');
-          expect(data[1].statusCode).to.be.equal(200);
+          expect(data.body).to.have.property('token');
+          expect(data.body).to.have.property('user');
+          expect(data.statusCode).to.be.equal(200);
           done();
         })
         .catch(error => done(error));
     });
-    it('it /api/register then /api/login: failure: Password is wrong', done => {
-      server
+    it('it /api/login: Success', done => {
+      agent
+        .post('/api/login')
+        .send(_user)
+        .then(data => {
+          expect(data.body).to.have.property('token');
+          expect(data.statusCode).to.be.equal(200);
+          token = data.body.token;
+          done();
+        })
+        .catch(error => done(error));
+    });
+    it('it /api/login: failure: Password is wrong', done => {
+      agent
         .post('/api/login')
         .send({
           ..._user,
           password: wrongPassword
         })
-
         .then(data => {
           expect(data.body.info).to.have.property('message');
           expect(data.body.info.message).to.be.equal('Password is wrong');
@@ -73,8 +82,8 @@ describe('API: Users', () => {
         })
         .catch(error => done(error));
     });
-    it('it /api/register then /api/login: failure: User not found', done => {
-      server
+    it('it /api/login: failure: User not found', done => {
+      agent
         .post('/api/login')
         .send({
           ..._user,
@@ -88,16 +97,23 @@ describe('API: Users', () => {
         })
         .catch(error => done(error));
     });
-    it('it isAuthenticated is true after login, false after logout', done => {
-      server
-        .post('/api/login')
-        .send(_user)
-        .then(data => {
-          server
+    it('it is authenticated after login', done => {
+      agent
+        .get('/api/me')
+        .then(res => {
+          expect(res).to.have.status(200);
+          done();
+        })
+        .catch(error => done(error));
+    });
+    it('it is not authenticated after logout', done => {
+      agent
+        .post('/api/logout')
+        .then(() => {
+          agent
             .get('/api/me')
             .then(res => {
-              expect(res).to.have.status(200);
-              expect(res.body.isAuthenticated).to.be.true;
+              expect(res).to.have.status(403);
               done();
             })
             .catch(error => done(error));

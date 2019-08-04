@@ -1,6 +1,6 @@
 // me
 const me = (req, res, next) => {
-  res.json({ isAuthenticated: req.isAuthenticated() });
+  res.json({ message: "that's me" });
 };
 
 export { me };

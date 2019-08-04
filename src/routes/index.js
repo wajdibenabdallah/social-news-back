@@ -20,8 +20,15 @@ ROUTER.post('/logout', (req, res) => {
   AUTH.logout(req, res);
 });
 
-ROUTER.get('/me', (req, res) => {
+ROUTER.get('/me', isLoggedIn, (req, res, next) => {
   PROFILE.me(req, res);
 });
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(403).send({ message: 'isNotAuthenticated' });
+}
 
 export default ROUTER;
