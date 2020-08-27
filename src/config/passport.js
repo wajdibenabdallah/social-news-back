@@ -1,5 +1,5 @@
 import { Strategy } from 'passport-local';
-import User from '../models/User';
+import User from '../models/user';
 
 export default function(passport) {
   passport.serializeUser(function(user, done) {

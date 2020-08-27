@@ -1,4 +1,4 @@
-import User from '../models/User';
+import User from '../models/user';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import APP from '../app';

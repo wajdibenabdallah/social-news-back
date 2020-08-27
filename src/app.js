@@ -13,11 +13,11 @@ const ROUTER = express.Router();
 let DATABASE;
 let PORT;
 if (process.env.NODE_ENV === 'dev') {
-  DATABASE = config_db.dev.url;
-  PORT = process.env.PORT || 4100;
+	DATABASE = config_db.dev.url;
+	PORT = process.env.PORT || 4100;
 } else {
-  DATABASE = config_db.test.url;
-  PORT = 5000 || 5100;
+	DATABASE = config_db.test.url;
+	PORT = 5000 || 5100;
 }
 mongoose.connect(DATABASE, { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
@@ -28,16 +28,18 @@ db.on('error', () => {});
 db.once('open', () => {});
 APP.use(bodyParser.json());
 APP.use(
-  session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
-  })
+	session({
+		secret: 'secret',
+		resave: true,
+		saveUninitialized: true
+	})
 );
 APP.use(passport.initialize());
 APP.use(passport.session());
 config_passport(passport);
 ROUTER.use('/api', api);
 APP.use(ROUTER);
-APP.listen(PORT, () => {});
+APP.listen(PORT, () => {
+	console.log(`Server running on PORT ${PORT}`);
+});
 export default APP;

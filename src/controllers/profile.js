@@ -1,6 +1,6 @@
 // me
 const me = (req, res, next) => {
-  res.json({ message: "that's me" });
+  res.json(req.user[0]);
 };
 
 export { me };

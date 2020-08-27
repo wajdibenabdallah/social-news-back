@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 const register = (req, res) => {
   let User = mongoose.model('User');
   let user = new User();
+  
   user.email = req.body.email;
   user.setPassword(req.body.password);
   user.save(err => {
