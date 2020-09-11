@@ -1,8 +1,12 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import * as EXP_REG from '../shared/regex';
 
 let userSchema = new mongoose.Schema({
+  firstname: String,
+  lastname: String,
+  phone: String,
   email: {
     type: String,
     unique: true,
@@ -39,6 +43,26 @@ userSchema.methods.generateJwt = function() {
     },
     'MY_SECRET'
   );
+};
+
+userSchema.methods.validateData = user => {
+  console.log('user', user);
+  
+  isValidFullName(user.firstname, user.lastname);
+};
+
+let isValidFullName = (firstname, lastname) => {
+  console.log(EXP_REG.hasSpecialCaracter(firstname) );
+  if (
+    EXP_REG.hasSpecialCaracter(firstname) ||
+    EXP_REG.hasSpecialCaracter(lastname) ||
+    EXP_REG.hasNumbers(firstname) ||
+    EXP_REG.hasNumbers(lastname) ||
+    !firstname?.isLengthAuthorized(3, 20) ||
+    !lastname?.isLengthAuthorized(3, 20)
+  ) {
+    console.log('NOOO');
+  }
 };
 
 export default mongoose.model('User', userSchema);
