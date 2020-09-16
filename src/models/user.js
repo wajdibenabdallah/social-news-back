@@ -46,13 +46,10 @@ userSchema.methods.generateJwt = function() {
 };
 
 userSchema.methods.validateData = user => {
-  console.log('user', user);
-  
   isValidFullName(user.firstname, user.lastname);
 };
 
 let isValidFullName = (firstname, lastname) => {
-  console.log(EXP_REG.hasSpecialCaracter(firstname) );
   if (
     EXP_REG.hasSpecialCaracter(firstname) ||
     EXP_REG.hasSpecialCaracter(lastname) ||
@@ -61,7 +58,7 @@ let isValidFullName = (firstname, lastname) => {
     !firstname?.isLengthAuthorized(3, 20) ||
     !lastname?.isLengthAuthorized(3, 20)
   ) {
-    console.log('NOOO');
+    console.log('fail');
   }
 };
 

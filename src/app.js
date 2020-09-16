@@ -18,9 +18,11 @@ let PORT;
 if (process.env.NODE_ENV === 'dev') {
 	DATABASE = config_db.dev.url;
 	PORT = process.env.PORT || 4100;
-} else {
+} else if (process.env.NODE_ENV === 'test') {
 	DATABASE = config_db.test.url;
 	PORT = 5000 || 5100;
+} else {
+	throw new Error('Unknown environment');
 }
 mongoose.connect(DATABASE, { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
