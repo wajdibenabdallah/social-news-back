@@ -3,7 +3,8 @@ import { Post } from '../models/post';
 
 // me
 const me = (req, res) => {
-  res.json(req.user[0]);
+  console.log(req.headers['authorization']);
+  res.status(200).send();
 };
 
 const publish = (req, res) => {
@@ -19,7 +20,7 @@ const publish = (req, res) => {
   post.data.image = req.body.image;
   post.data.creationDate = req.body.creationDate;
 
-  post.save(err => {
+  post.save((err) => {
     if (err) {
       res.status(500).json({ error: err });
       return;
@@ -30,12 +31,11 @@ const publish = (req, res) => {
 
 const load = (req, res) => {
   let Post = mongoose.model('Post');
-  
+
   Post.find({}, (err, data) => {
-    if (err)
-      res.status(500).send('Error');
+    if (err) res.status(500).send('Error');
     res.status(200).send(data);
-  })
-}
+  });
+};
 
 export { me, publish, load };
