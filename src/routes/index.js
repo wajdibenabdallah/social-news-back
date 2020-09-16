@@ -35,6 +35,10 @@ ROUTER.get('/me', isLoggedIn, (req, res) => {
     PROFILE.me(req, res);
 });
 
+ROUTER.get('/post', isLoggedIn, (req, res) => { 
+    PROFILE.load(req, res);
+});
+
 ROUTER.post('/post', isLoggedIn, (req, res) => { 
     PROFILE.publish(req, res);
 });

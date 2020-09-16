@@ -28,4 +28,14 @@ const publish = (req, res) => {
   });
 };
 
-export { me, publish };
+const load = (req, res) => {
+  let Post = mongoose.model('Post');
+  
+  Post.find({}, (err, data) => {
+    if (err)
+      res.status(500).send('Error');
+    res.status(200).send(data);
+  })
+}
+
+export { me, publish, load };
