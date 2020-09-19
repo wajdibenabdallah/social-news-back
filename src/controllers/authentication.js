@@ -6,18 +6,21 @@ const register = (req, res) => {
   let User = mongoose.model('User');
   let user = new User();
 
-  user.validateData(req.body);
+  // user.validateData(req.body);
 
   user.email = req.body.email;
   user.setPassword(req.body.password);
-  user.save(err => {
+  user.firstname = req.body.firstName;
+  user.lastname = req.body.lastName;
+  user.phone = req.body.phone;
+  user.save((err) => {
     if (err) {
       res.status(500).json({ error: err });
       return;
     }
     res.json({
       token: user.generateJwt(),
-      user: user
+      user: user,
     });
   });
 };
@@ -32,7 +35,7 @@ const login = (req, res) => {
     }
     if (user) {
       token = user.generateJwt();
-      req.login(user, err => {
+      req.login(user, (err) => {
         if (err) {
           res.status(500).json({ error: err });
           return;

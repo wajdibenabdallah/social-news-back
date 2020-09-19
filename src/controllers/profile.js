@@ -1,12 +1,22 @@
 import mongoose from 'mongoose';
+// TODO
 import { Post } from '../models/post';
+import jwt from 'jsonwebtoken';
 
 // me
 const me = (req, res) => {
-  console.log(req.headers['authorization']);
-  res.status(200).send();
+  let token = req.headers.authorization.split(' ')[1];
+  let user;
+  try {
+    user = jwt.verify(token, process.env.SECRET);
+  } catch (e) {
+    console.log(e);
+    return res.status(401).send('unauthorized');
+  }
+  res.status(200).send(user);
 };
 
+// publish new
 const publish = (req, res) => {
   let Post = mongoose.model('Post');
   let post = new Post();
@@ -18,7 +28,7 @@ const publish = (req, res) => {
   post.data.title = req.body.title;
   post.data.text = req.body.text;
   post.data.image = req.body.image;
-  post.data.creationDate = req.body.creationDate;
+  post.data.creationDate = new Date();
 
   post.save((err) => {
     if (err) {
@@ -29,9 +39,9 @@ const publish = (req, res) => {
   });
 };
 
+// load news
 const load = (req, res) => {
   let Post = mongoose.model('Post');
-
   Post.find({}, (err, data) => {
     if (err) res.status(500).send('Error');
     res.status(200).send(data);
