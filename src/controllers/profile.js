@@ -19,10 +19,8 @@ const me = (req, res) => {
 
 // publish new
 const publish = (req, res) => {
-  console.log(req.file);
   let Post = mongoose.model('Post');
   let post = new Post();
-  post.creationDate = new Date();
 
   /*
   if (!post.isValid(req.body)) {
@@ -33,8 +31,11 @@ const publish = (req, res) => {
 
   post.data.title = req.body.title;
   post.data.text = req.body.text;
-  post.data.imageUri = path.join(req.file.destination, req.file.filename);
   post.data.creationDate = new Date();
+
+  if (req.file) {
+    post.data.imageUri = path.join(req.file.destination, req.file.filename);
+  }
 
   post.save((err) => {
     if (err) {
