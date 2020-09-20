@@ -2,7 +2,7 @@ import express from 'express';
 import * as AUTH from '../controllers/authentication';
 import * as PROFILE from '../controllers/profile';
 import jwt from 'jsonwebtoken';
-
+import upload from '../config/multer';
 const ROUTER = express.Router();
 
 const isLoggedIn = (req, res, next) => {
@@ -44,8 +44,9 @@ ROUTER.get('/post', isLoggedIn, (req, res) => {
   PROFILE.load(req, res);
 });
 
-ROUTER.post('/post', isLoggedIn, (req, res) => {
-  PROFILE.publish(req, res);
+ROUTER.post('/post', isLoggedIn, upload.single('file'), (req, res) => {
+  console.log(req.file);
+  // PROFILE.publish(req, res);
 });
 
 export default ROUTER;
