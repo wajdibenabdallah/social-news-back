@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 // TODO
 import { Post } from '../models/post';
 import jwt from 'jsonwebtoken';
+import path from 'path';
 
 // me
 const me = (req, res) => {
@@ -18,16 +19,21 @@ const me = (req, res) => {
 
 // publish new
 const publish = (req, res) => {
+  console.log(req.file);
   let Post = mongoose.model('Post');
   let post = new Post();
+  post.creationDate = new Date();
+
+  /*
   if (!post.isValid(req.body)) {
     res.status(400).json('Données invalide');
     return;
   }
+  */
 
   post.data.title = req.body.title;
   post.data.text = req.body.text;
-  post.data.image = req.body.image;
+  post.data.imageUri = path.join(req.file.destination, req.file.filename);
   post.data.creationDate = new Date();
 
   post.save((err) => {

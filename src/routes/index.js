@@ -44,9 +44,8 @@ ROUTER.get('/post', isLoggedIn, (req, res) => {
   PROFILE.load(req, res);
 });
 
-ROUTER.post('/post', isLoggedIn, upload.single('file'), (req, res) => {
-  console.log(req.file);
-  // PROFILE.publish(req, res);
+ROUTER.post('/post', isLoggedIn, upload.single('image'), (req, res) => {
+  PROFILE.publish(req, res);
 });
 
 export default ROUTER;

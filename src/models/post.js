@@ -3,17 +3,18 @@ import mongoose from 'mongoose';
 let postSchema = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
   },
   data: {
     title: String,
     text: String,
-    image: String,
-    creationDate: Date
-  }
+    imageUri: String,
+    creationDate: Date,
+  },
 });
 
-postSchema.methods.isValid = data => {
+postSchema.methods.isValid = (data) => {
+  data = JSON.parse(JSON.stringify(data));
   if (data.hasOwnProperty('title') && data.title.length === 0) {
     return false;
   }
@@ -21,9 +22,6 @@ postSchema.methods.isValid = data => {
     return false;
   }
   if (data.hasOwnProperty('image') && data.image.length === 0) {
-    return false;
-  }
-  if (data.hasOwnProperty('creationDate') && data.creationDate.length === 0) {
     return false;
   }
   return true;

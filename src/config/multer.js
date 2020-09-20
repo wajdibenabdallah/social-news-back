@@ -1,11 +1,10 @@
 import multer from 'multer';
 import fileExtension from 'file-extension';
 
-// config multer
 const storage = multer.diskStorage({
   // Setting directory on disk to save uploaded files
   destination: function (req, file, cb) {
-    cb(null, 'src/storage/posts');
+    cb(null, 'public/storage/posts');
   },
 
   // Setting name of file saved
@@ -32,6 +31,5 @@ const upload = multer({
     cb(undefined, true);
   },
 });
-// *config multer
 
 export default upload;

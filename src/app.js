@@ -8,9 +8,12 @@ import config_passport from './config/passport';
 import * as config_db from './config/db';
 import session from 'express-session';
 import cors from 'cors';
+import path from 'path';
 
 dotenv.config();
 const APP = express();
+APP.use(express.static(path.join(__dirname, '..')));
+
 APP.use(cors());
 const ROUTER = express.Router();
 let DATABASE;
@@ -43,6 +46,7 @@ APP.use(passport.initialize());
 APP.use(passport.session());
 config_passport(passport);
 ROUTER.use('/api', api);
+
 APP.use(ROUTER);
 APP.listen(PORT, () => {
   console.log(`Server running on PORT ${PORT}`);
