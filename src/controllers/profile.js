@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 // TODO
-import { Post } from '../models/post';
+import Post from '../models/post';
 import jwt from 'jsonwebtoken';
 import path from 'path';
 
@@ -41,7 +41,6 @@ const publish = (req, res) => {
 
 // load news
 const load = (req, res) => {
-  let Post = mongoose.model('Post');
   Post.find(createFilterObject(req.query), (err, data) => {
     if (err) res.status(500).send('Error');
     res.status(200).send(data);
@@ -50,15 +49,13 @@ const load = (req, res) => {
 
 // TODO : Think about better solution
 const createFilterObject = (filters) => {
-  if (Object.keys(filters).length === 0 && filters.constructor === Object) {
-    return {};
-  } else {
-    let formatedFilter = {};
-    Object.entries(filters).forEach((filter) => {
-      formatedFilter['data.' + filter[0]] = filter[1];
-    });
-    return formatedFilter;
-  }
+  let formatedFilter = {};
+  Object.entries(filters).forEach((filter) => {
+    let key = 'data.' + filter[0];
+    let value = { $regex: `${filter[1]}`, $options: 'i' };
+    formatedFilter[key] = value;
+  });
+  return formatedFilter;
 };
 
 export { me, publish, load };

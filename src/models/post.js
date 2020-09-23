@@ -1,19 +1,21 @@
 import mongoose from 'mongoose';
 
-let postSchema = new mongoose.Schema({
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
-  data: {
-    title: String,
-    text: String,
-    imageUri: String,
-    creationDate: Date,
-  },
-});
+const Post = mongoose.model('Post', new mongoose.Schema({
+      author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      data: {
+        title: String,
+        text: String,
+        imageUri: String,
+        creationDate: Date,
+      },
+    })
 
-postSchema.methods.isValid = (data) => {
+); 
+
+Post.isValid = (data) => {
   data = JSON.parse(JSON.stringify(data));
   if (data.hasOwnProperty('title') && data.title.length === 0) {
     return false;
@@ -27,4 +29,4 @@ postSchema.methods.isValid = (data) => {
   return true;
 };
 
-export default mongoose.model('Post', postSchema);
+export default Post;
