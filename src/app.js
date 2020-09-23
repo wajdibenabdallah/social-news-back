@@ -39,7 +39,7 @@ APP.use(
   session({
     secret: 'secret',
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: true
   })
 );
 APP.use(passport.initialize());

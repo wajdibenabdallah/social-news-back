@@ -1,14 +1,14 @@
 {
-  "name": "node_auth_module",
+  "name": "devgames",
   "version": "0.0.3",
-  "description": "Node Authentication Module",
+  "description": "Dev Games",
   "main": "src/index.js",
   "scripts": {
     "start": "nodemon --exec babel-node .",
     "lint": "eslint src/*",
     "lint-fix": "eslint src/ --fix",
     "prettier": "prettier src/**/*.js",
-    "prettier-write": "prettier --write src/**/*.*",
+    "prettier-write": "prettier --write src/**/*.js",
     "test": "SET NODE_ENV = test & mocha --timeout 10000 --require @babel/register src/**/*.spec.js --exit"
   },
   "keywords": [],

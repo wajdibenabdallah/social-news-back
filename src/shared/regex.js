@@ -10,15 +10,15 @@ let isValidEmail = expression => {
   return EXPREG_EMAIL.test(expression);
 };
 let hasSpecialCaracter = expression => {
-    // console.log('----------test \n', expression, '\n');
-    // console.log(EXPREG_SPECIAL_CARACTER.test(expression))
+  // console.log('----------test \n', expression, '\n');
+  // console.log(EXPREG_SPECIAL_CARACTER.test(expression))
   return EXPREG_SPECIAL_CARACTER.test(expression);
 };
 let hasNumbers = expression => {
   return HAS_NUMBER.test(expression);
 };
 
-String.prototype.isLengthAuthorized = function (min, max) {
+String.prototype.isLengthAuthorized = function(min, max) {
   let regex = new RegExp(`.{${min},${max}}`);
   return regex.test(this);
 };

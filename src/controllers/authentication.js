@@ -13,14 +13,14 @@ const register = (req, res) => {
   user.firstname = req.body.firstName;
   user.lastname = req.body.lastName;
   user.phone = req.body.phone;
-  user.save((err) => {
+  user.save(err => {
     if (err) {
       res.status(500).json({ error: err });
       return;
     }
     res.json({
       token: user.generateJwt(),
-      user: user,
+      user: user
     });
   });
 };
@@ -35,7 +35,7 @@ const login = (req, res) => {
     }
     if (user) {
       token = user.generateJwt();
-      req.login(user, (err) => {
+      req.login(user, err => {
         if (err) {
           res.status(500).json({ error: err });
           return;
@@ -51,7 +51,7 @@ const login = (req, res) => {
 // logout
 const logout = (req, res) => {
   res.status(200).json({
-    message: 'Successful logout',
+    message: 'Successful logout'
   });
 };
 
