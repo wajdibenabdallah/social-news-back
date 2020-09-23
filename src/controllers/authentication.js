@@ -50,8 +50,9 @@ const login = (req, res) => {
 
 // logout
 const logout = (req, res) => {
-  req.logout();
-  res.send('logout');
+  res.status(200).json({
+    message: 'Successful logout',
+  });
 };
 
 export { login, register, logout };
