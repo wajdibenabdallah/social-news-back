@@ -28,13 +28,12 @@ const register = (req, res) => {
 // login
 const login = (req, res) => {
   passport.authenticate('local', (error, user, info) => {
-    let token;
     if (error) {
       res.status(404).json(error);
       return;
     }
     if (user) {
-      token = user.generateJwt();
+      let token = user.generateJwt();
       req.login(user, err => {
         if (err) {
           res.status(500).json({ error: err });
