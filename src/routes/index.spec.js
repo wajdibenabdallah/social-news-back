@@ -9,10 +9,15 @@ chai.use(chaiHttp);
 
 const _user = {
     email: 'test1@gmail.com',
-    password: 'test1',
+    password: 'aaaaaaaa',
+    firstname: 'useruser',
+    lastname: 'useruser',
+    passwordConfirm: 'aaaaaaaa',
+    phone: '+33611762907',
   },
   wrongEmail = 'test2@gmail.com',
   wrongPassword = 'test2';
+
 let token;
 
 describe('API: Users', () => {
@@ -40,7 +45,6 @@ describe('API: Users', () => {
   });
 
   describe('Register, Login, Logout', () => {
-    let token;
     it('it /api/register', (done) => {
       agent
         .post('/api/register')
@@ -110,6 +114,111 @@ describe('API: Users', () => {
         .post('/api/logout')
         .then((res) => {
           expect(res).to.have.status(200);
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it('it /api/me: should get user information', (done) => {
+      agent
+        .get('/api/me')
+        .set('authorization', `Bearer ${token}`)
+        .then((res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.property('_id');
+          expect(res.body).to.have.property('email');
+          expect(res.body).to.have.property('exp');
+          expect(res.body).to.have.property('iat');
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it('it /api/register: should fail if data are invalid (firstname)', (done) => {
+      agent
+        .post('/api/register')
+        .send({
+          ..._user,
+          firstname: 'azdkd,sd',
+        })
+        .then((res) => {
+          expect(res).to.have.status(422);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Firstname invalid');
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it('it /api/register: should fail if data are invalid (lastname)', (done) => {
+      agent
+        .post('/api/register')
+        .send({
+          ..._user,
+          lastname: 'azdk dsd',
+        })
+        .then((res) => {
+          expect(res).to.have.status(422);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Lastname invalid');
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it('it /api/register: should fail if data are invalid (phone)', (done) => {
+      agent
+        .post('/api/register')
+        .send({
+          ..._user,
+          phone: '267823',
+        })
+        .then((res) => {
+          expect(res).to.have.status(422);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Phone invalid');
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it('it /api/register: should fail if data are invalid (email)', (done) => {
+      agent
+        .post('/api/register')
+        .send({
+          ..._user,
+          email: 'azdkdsd@z.c',
+        })
+        .then((res) => {
+          expect(res).to.have.status(422);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Email invalid');
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it('it /api/register: should fail if data are invalid (password)', (done) => {
+      agent
+        .post('/api/register')
+        .send({
+          ..._user,
+          password: 'aaaaaaa',
+        })
+        .then((res) => {
+          expect(res).to.have.status(422);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Password invalid');
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it('it /api/register: should fail if data are invalid (confirmPassword)', (done) => {
+      agent
+        .post('/api/register')
+        .send({
+          ..._user,
+          password: 'aaaaaaaa',
+          passwordConfirm: 'aaaaaa',
+        })
+        .then((res) => {
+          expect(res).to.have.status(422);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Password confirmation invalid');
           done();
         })
         .catch((error) => done(error));

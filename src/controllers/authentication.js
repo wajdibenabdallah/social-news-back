@@ -6,7 +6,12 @@ const register = (req, res) => {
   let User = mongoose.model('User');
   let user = new User();
 
-  // user.validateData(req.body);
+  let validity = user.validateData(req.body);
+
+  if (validity) {
+    res.status(422).json({ message: validity });
+    return;
+  }
 
   user.email = req.body.email;
   user.setPassword(req.body.password);

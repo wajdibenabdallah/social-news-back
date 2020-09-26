@@ -1,24 +1,20 @@
-const EXPREG_PHONE_NUMBER = /^\+[0-9]{10,13}$/;
-const EXPREG_EMAIL = /^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/;
-const EXPREG_SPECIAL_CARACTER = /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\?|\/|\"|\;|\:|\s/;
-const HAS_NUMBER = /\d/;
-
-let isValidPhoneNumber = (expression) => {
-  return EXPREG_PHONE_NUMBER.test(expression);
-};
-let isValidEmail = (expression) => {
-  return EXPREG_EMAIL.test(expression);
-};
-let hasSpecialCaracter = (expression) => {
-  return EXPREG_SPECIAL_CARACTER.test(expression);
-};
-let hasNumbers = (expression) => {
-  return HAS_NUMBER.test(expression);
+const expReg = {
+  IS_EMAIL: /^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/,
+  IS_PHONE_NUMBER: /^\+[0-9]{10,13}$/,
+  HAS_SPECIAL_CARACTER: /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\?|\/|\"|\;|\:|\s/,
+  HAS_NUMBER: /\d/,
+  IS_VALID_IMAGE: /^(.*\.(?!(jpg|png|jpeg)$))?[^.]*$/i,
 };
 
-String.prototype.isLengthAuthorized = function (min, max) {
-  let regex = new RegExp(`.{${min},${max}}`);
-  return regex.test(this);
-};
+export default expReg;
+// Synchronized with FrontEnd
 
-export { isValidPhoneNumber, hasSpecialCaracter, hasNumbers, isValidEmail };
+// Rules
+/*
+  // USER
+  Firstname and Lastname should contains between 5 and 20 characters and no numeric special characters or numeric
+  Email Number Should be matched with the required form
+  Phone Number Should be matched with the required form
+  Password should contains at least 8 characters
+  // POST
+*/

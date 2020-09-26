@@ -21,7 +21,7 @@ const isLoggedIn = (req, res, next) => {
 
 // authentication
 
-ROUTER.use('/test', (_, res) => {
+ROUTER.use('/test', (req, res) => {
   res.status(200).send({ result: true });
 });
 

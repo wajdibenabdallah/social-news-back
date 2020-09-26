@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
-import * as EXP_REG from '../shared/regex';
+import expReg from '../shared/regex';
 
 let userSchema = new mongoose.Schema({
   firstname: String,
@@ -10,27 +10,27 @@ let userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   hash: String,
-  salt: String
+  salt: String,
 });
 
-userSchema.methods.setPassword = function(password) {
+userSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto
     .pbkdf2Sync(password, this.salt, 1000, 64, 'sha512')
     .toString('hex');
 };
 
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.validPassword = function (password) {
   return (
     this.hash ===
     crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex')
   );
 };
 
-userSchema.methods.generateJwt = function() {
+userSchema.methods.generateJwt = function () {
   let expiry = new Date();
   expiry.setDate(expiry.getDate() + 7);
 
@@ -41,27 +41,35 @@ userSchema.methods.generateJwt = function() {
       firstname: this.firstname,
       lastname: this.lastname,
       phone: this.phone,
-      exp: parseInt(expiry.getTime() / 1000)
+      exp: parseInt(expiry.getTime() / 1000),
     },
     process.env.SECRET
   );
 };
 
-userSchema.methods.validateData = user => {
-  isValidFullName(user.firstname, user.lastname);
-};
-
-let isValidFullName = (firstname, lastname) => {
+userSchema.methods.validateData = (user) => {
   if (
-    EXP_REG.hasSpecialCaracter(firstname) ||
-    EXP_REG.hasSpecialCaracter(lastname) ||
-    EXP_REG.hasNumbers(firstname) ||
-    EXP_REG.hasNumbers(lastname) ||
-    !firstname?.isLengthAuthorized(3, 20) ||
-    !lastname?.isLengthAuthorized(3, 20)
-  ) {
-    console.log('fail');
-  }
+    !user.firstname ||
+    expReg.HAS_SPECIAL_CARACTER.test(user.firstname) ||
+    user.firstname?.length > 20 ||
+    user.firstname?.length < 5
+  )
+    return `Firstname invalid`;
+  if (
+    !user.lastname ||
+    expReg.HAS_SPECIAL_CARACTER.test(user.lastname) ||
+    user.lastname?.length > 20 ||
+    user.lastname?.length < 5
+  )
+    return `Lastname invalid`;
+  if (!user.email || !expReg.IS_EMAIL.test(user.email)) return `Email invalid`;
+  if (!user.phone || !expReg.IS_PHONE_NUMBER.test(user.phone))
+    return `Phone invalid`;
+  if (!user.password || user.password?.length < 8) return `Password invalid`;
+  if (user?.passwordConfirm !== user?.password)
+    return `Password confirmation invalid`;
+
+  return null;
 };
 
 export default mongoose.model('User', userSchema);
