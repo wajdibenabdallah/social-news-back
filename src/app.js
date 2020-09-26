@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'dev') {
   PORT = process.env.PORT || 4100;
 } else if (process.env.NODE_ENV === 'test') {
   DATABASE = config_db.test.url;
-  PORT = 5000 || 5100;
+  PORT = 5000;
 } else {
   throw new Error('Unknown environment');
 }
@@ -39,7 +39,7 @@ APP.use(
   session({
     secret: 'secret',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
   })
 );
 APP.use(passport.initialize());
@@ -49,6 +49,8 @@ ROUTER.use('/api', api);
 
 APP.use(ROUTER);
 APP.listen(PORT, () => {
-  console.log(`Server running on PORT ${PORT}`);
+  console.info(`Server is running\n`);
+  console.info(`PORT : ${PORT}\n`);
+  console.info(`ENVIRONMENT: ${process.env.NODE_ENV}\n`);
 });
 export default APP;
