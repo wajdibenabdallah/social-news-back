@@ -5,18 +5,24 @@ const Post = mongoose.model(
   new mongoose.Schema({
     author: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
     },
     data: {
       title: String,
       text: String,
       imageUri: String,
-      creationDate: Date
-    }
+      creationDate: Date,
+    },
   })
 );
 
-Post.isValid = data => {
+Post.validateData = (post) => {
+  if (!post.title) return `Title invalid`;
+  if (post.text.length < 50) return `Text invalid`;
+  return null;
+};
+
+Post.isValid = (data) => {
   data = JSON.parse(JSON.stringify(data));
   if (data.hasOwnProperty('title') && data.title.length === 0) {
     return false;

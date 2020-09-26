@@ -21,6 +21,13 @@ const publish = (req, res) => {
   let Post = mongoose.model('Post');
   let post = new Post();
 
+  let validity = Post.validateData(req.body);
+
+  if (validity) {
+    res.status(422).json({ message: validity });
+    return;
+  }
+
   post.data.title = req.body.title;
   post.data.text = req.body.text;
   post.data.creationDate = new Date();

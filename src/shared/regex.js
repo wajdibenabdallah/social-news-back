@@ -17,4 +17,6 @@ export default expReg;
   Phone Number Should be matched with the required form
   Password should contains at least 8 characters
   // POST
+  Title shouldn't be empty
+  Text Should contains at least 50 characters
 */

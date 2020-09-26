@@ -1,4 +1,6 @@
 import User from '../models/user';
+import Post from '../models/post';
+
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import APP from '../app';
@@ -7,21 +9,21 @@ let expect = require('chai').expect;
 
 chai.use(chaiHttp);
 
-const _user = {
-    email: 'test1@gmail.com',
-    password: 'aaaaaaaa',
-    firstname: 'useruser',
-    lastname: 'useruser',
-    passwordConfirm: 'aaaaaaaa',
-    phone: '+33611762907',
-  },
-  wrongEmail = 'test2@gmail.com',
-  wrongPassword = 'test2';
-
 let token;
+let agent;
 
-describe('API: Users', () => {
-  let agent;
+describe('API: User/Post', () => {
+  const _user = {
+      email: 'test1@gmail.com',
+      password: 'aaaaaaaa',
+      firstname: 'useruser',
+      lastname: 'useruser',
+      passwordConfirm: 'aaaaaaaa',
+      phone: '+33611762907',
+    },
+    wrongEmail = 'test2@gmail.com',
+    wrongPassword = 'test2';
+
   before((done) => {
     agent = chai.request.agent(APP);
     User.deleteMany({}, (err) => {
@@ -222,6 +224,77 @@ describe('API: Users', () => {
           done();
         })
         .catch((error) => done(error));
+    });
+  });
+  describe('Post', () => {
+    const _post = {
+      title: 'Title',
+      text: `aaaaaaaaaaaaaaaaaaaa
+        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        aaaaaaaaaaaaaaaaaaaaaaaaa`,
+    };
+
+    before((done) => {
+      agent = chai.request.agent(APP);
+      Post.deleteMany({}, (err) => {
+        done(err);
+      });
+    });
+
+    after((done) => {
+      agent.close();
+      done();
+    });
+
+    it('it /api/post: Should create a post', (done) => {
+      agent
+        .post('/api/post')
+        .set('authorization', `Bearer ${token}`)
+        .send(_post)
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(200);
+          expect(res.body.success).to.be.true;
+          done();
+        });
+    });
+    it('it /api/post: Creating post should be failed (Title invalid) ', (done) => {
+      agent
+        .post('/api/post')
+        .set('authorization', `Bearer ${token}`)
+        .send({
+          ..._post,
+          title: '',
+        })
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(422);
+          expect(res.body.message).to.be.equal('Title invalid');
+          done();
+        });
+    });
+    it('it /api/post: Creating post should be failed (Text invalid) ', (done) => {
+      agent
+        .post('/api/post')
+        .set('authorization', `Bearer ${token}`)
+        .send({
+          ..._post,
+          text: 'Text length low than 50',
+        })
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(422);
+          expect(res.body.message).to.be.equal('Text invalid');
+          done();
+        });
+    });
+    it("it /api/post: Shouldn't create post if user is not authorized", (done) => {
+      agent
+        .post('/api/post')
+        .send(_post)
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(403);
+          expect(res.body.message).to.be.equal('isNotAuthenticated');
+          done();
+        });
     });
   });
 });

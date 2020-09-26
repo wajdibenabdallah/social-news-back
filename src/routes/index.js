@@ -6,6 +6,10 @@ import upload from '../config/multer';
 const ROUTER = express.Router();
 
 const isLoggedIn = (req, res, next) => {
+  if (!req.headers['authorization']) {
+    res.status(403).send({ message: 'isNotAuthenticated' });
+    return;
+  }
   jwt.verify(
     req.headers['authorization'].split(' ')[1],
     process.env.SECRET,
