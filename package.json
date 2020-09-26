@@ -9,7 +9,7 @@
     "lint-fix": "eslint src/ --fix",
     "prettier": "prettier src/**/*.js",
     "prettier-write": "prettier --write src/**/*.js",
-    "test": "SET NODE_ENV = test & mocha --timeout 10000 --require @babel/register src/**/*.spec.js --exit"
+    "test": "SET NODE_ENV = test & mocha --timeout 10000 --require @babel/register src/**/*.spec.js"
   },
   "keywords": [],
   "author": "Wajdi Ben Abdallah",

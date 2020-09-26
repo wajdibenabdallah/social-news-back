@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 
 const _user = {
     email: 'test1@gmail.com',
-    password: 'test1'
+    password: 'test1',
   },
   wrongEmail = 'test2@gmail.com',
   wrongPassword = 'test2';
@@ -17,20 +17,20 @@ let token;
 
 describe('API: Users', () => {
   let agent;
-  before(done => {
+  before((done) => {
     agent = chai.request.agent(APP);
-    User.deleteMany({}, err => {
-      done();
+    User.deleteMany({}, (err) => {
+      done(err);
     });
   });
 
-  after(done => {
+  after((done) => {
     agent.close();
     done();
   });
 
   describe('Test', () => {
-    it('it /api/test', done => {
+    it('it /api/test', (done) => {
       agent.get('/api/test').end((err, res) => {
         expect(res.statusCode).to.equal(200);
         expect(res.body.result).to.be.true;
@@ -40,82 +40,79 @@ describe('API: Users', () => {
   });
 
   describe('Register, Login, Logout', () => {
-    it('it /api/register', done => {
+    let token;
+    it('it /api/register', (done) => {
       agent
         .post('/api/register')
         .send(_user)
-        .then(data => {
+        .then((data) => {
           expect(data.body).to.have.property('token');
           expect(data.body).to.have.property('user');
           expect(data.statusCode).to.be.equal(200);
           done();
         })
-        .catch(error => done(error));
+        .catch((error) => done(error));
     });
-    it('it /api/login: Success', done => {
+    it('it /api/login: Success', (done) => {
       agent
         .post('/api/login')
         .send(_user)
-        .then(data => {
+        .then((data) => {
           expect(data.body).to.have.property('token');
           expect(data.statusCode).to.be.equal(200);
           token = data.body.token;
           done();
         })
-        .catch(error => done(error));
+        .catch((error) => done(error));
     });
-    it('it /api/login: failure: Password is wrong', done => {
+    it('it /api/login: failure: Password is wrong', (done) => {
       agent
         .post('/api/login')
         .send({
           ..._user,
-          password: wrongPassword
+          password: wrongPassword,
         })
-        .then(data => {
+        .then((data) => {
           expect(data.body.info).to.have.property('message');
           expect(data.body.info.message).to.be.equal('Password is wrong');
           expect(data.statusCode).to.be.equal(401);
           done();
         })
-        .catch(error => done(error));
+        .catch((error) => done(error));
     });
-    it('it /api/login: failure: User not found', done => {
+    it('it /api/login: failure: User not found', (done) => {
       agent
         .post('/api/login')
         .send({
           ..._user,
-          email: wrongEmail
+          email: wrongEmail,
         })
-        .then(data => {
+        .then((data) => {
           expect(data.body.info).to.have.property('message');
           expect(data.body.info.message).to.be.equal('User not found');
           expect(data.statusCode).to.be.equal(401);
           done();
         })
-        .catch(error => done(error));
+        .catch((error) => done(error));
     });
-    it('it is authenticated after login', done => {
+    it('it is authenticated after login', (done) => {
       agent
         .get('/api/me')
-        .then(res => {
+        .set('authorization', `Bearer ${token}`)
+        .then((res) => {
           expect(res).to.have.status(200);
           done();
         })
-        .catch(error => done(error));
+        .catch((error) => done(error));
     });
-    it('it is not authenticated after logout', done => {
+    it('it /api/login: should logout', (done) => {
       agent
         .post('/api/logout')
-        .then(() => {
-          agent
-            .get('/api/me')
-            .then(res => {
-              expect(res).to.have.status(403);
-              done();
-            })
-            .catch(error => done(error));
+        .then((res) => {
+          expect(res).to.have.status(200);
+          done();
         })
-        .catch(error => done(error));
+        .catch((error) => done(error));
     });
   });
 });

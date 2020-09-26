@@ -11,7 +11,6 @@ const me = (req, res) => {
   try {
     user = jwt.verify(token, process.env.SECRET);
   } catch (e) {
-    console.log(e);
     return res.status(401).send('unauthorized');
   }
   res.status(200).send(user);
@@ -30,7 +29,7 @@ const publish = (req, res) => {
     post.data.imageUri = path.join(req.file.destination, req.file.filename);
   }
 
-  post.save(err => {
+  post.save((err) => {
     if (err) {
       res.status(500).json({ error: err });
       return;
@@ -48,9 +47,9 @@ const load = (req, res) => {
 };
 
 // TODO : Think about better solution
-const createFilterObject = filters => {
+const createFilterObject = (filters) => {
   let formatedFilter = {};
-  Object.entries(filters).forEach(filter => {
+  Object.entries(filters).forEach((filter) => {
     let key = 'data.' + filter[0];
     let value = { $regex: `${filter[1]}`, $options: 'i' };
     formatedFilter[key] = value;
