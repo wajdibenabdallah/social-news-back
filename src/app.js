@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import api from './routes';
 import config_passport from './config/passport';
-import * as config_db from './config/db';
+import { environment } from './config/environment';
 import session from 'express-session';
 import cors from 'cors';
 import path from 'path';
@@ -13,28 +13,14 @@ import path from 'path';
 dotenv.config();
 const APP = express();
 APP.use(express.static(path.join(__dirname, '..')));
-
 APP.use(cors());
 const ROUTER = express.Router();
-let DATABASE;
-let PORT;
-if (process.env.NODE_ENV === 'dev') {
-  DATABASE = config_db.dev.url;
-  PORT = process.env.PORT || 4100;
-} else if (process.env.NODE_ENV === 'test') {
-  DATABASE = config_db.test.url;
-  PORT = 5000;
-} else if (process.env.NODE_ENV === 'prod') {
-  DATABASE = config_db.prod.url;
-  PORT = process.env.PORT || 4100;
-} else {
-  throw new Error('Unknown environment');
-}
+const DATABASE = environment['db'][process.env.NODE_ENV]['url'];
+const PORT = process.env.PORT;
 mongoose.connect(DATABASE, { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
 mongoose.set('debug', true);
-
-let db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', () => {});
 db.once('open', () => {});
 APP.use(bodyParser.json({ limit: '50mb' }));
@@ -49,11 +35,10 @@ APP.use(passport.initialize());
 APP.use(passport.session());
 config_passport(passport);
 ROUTER.use('/api', api);
-
 APP.use(ROUTER);
 APP.listen(PORT, () => {
-  console.info(`Server is running\n`);
-  console.info(`PORT : ${PORT}\n`);
-  console.info(`ENVIRONMENT: ${process.env.NODE_ENV}\n`);
+  console.info(`\nServer is running`);
+  console.info(`\tPORT : ${PORT}`);
+  console.info(`\tENVIRONMENT: ${process.env.NODE_ENV}\n`);
 });
 export default APP;
