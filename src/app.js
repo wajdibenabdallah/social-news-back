@@ -24,6 +24,9 @@ if (process.env.NODE_ENV === 'dev') {
 } else if (process.env.NODE_ENV === 'test') {
   DATABASE = config_db.test.url;
   PORT = 5000;
+} else if (process.env.NODE_ENV === 'prod') {
+  DATABASE = config_db.prod.url;
+  PORT = process.env.PORT || 4100;
 } else {
   throw new Error('Unknown environment');
 }

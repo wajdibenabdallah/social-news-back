@@ -1,9 +1,13 @@
 const dev = {
-  url: 'mongodb://localhost:27017/auth_node_dev'
+  url: 'mongodb://localhost:27017/dev_paltform_dev',
 };
 
 const test = {
-  url: 'mongodb://localhost:27017/auth_node_test'
+  url: 'mongodb://localhost:27017/dev_paltform_test',
 };
 
-export { dev, test };
+const prod = {
+  url: 'mongodb://localhost:27017/dev_paltform_prod',
+};
+
+export { dev, test, prod };
