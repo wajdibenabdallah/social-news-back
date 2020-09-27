@@ -49,24 +49,24 @@ userSchema.methods.generateJwt = function () {
 
 userSchema.methods.validateData = (user) => {
   if (
-    !user.firstname ||
-    expReg.HAS_SPECIAL_CARACTER.test(user.firstname) ||
-    user.firstname?.length > 20 ||
-    user.firstname?.length < 5
+    !user.firstName ||
+    expReg.HAS_SPECIAL_CARACTER.test(user.firstName) ||
+    user.firstName?.length > 20 ||
+    user.firstName?.length < 5
   )
     return `Firstname invalid`;
   if (
-    !user.lastname ||
-    expReg.HAS_SPECIAL_CARACTER.test(user.lastname) ||
-    user.lastname?.length > 20 ||
-    user.lastname?.length < 5
+    !user.lastName ||
+    expReg.HAS_SPECIAL_CARACTER.test(user.lastName) ||
+    user.lastName?.length > 20 ||
+    user.lastName?.length < 5
   )
     return `Lastname invalid`;
   if (!user.email || !expReg.IS_EMAIL.test(user.email)) return `Email invalid`;
   if (!user.phone || !expReg.IS_PHONE_NUMBER.test(user.phone))
     return `Phone invalid`;
   if (!user.password || user.password?.length < 8) return `Password invalid`;
-  if (user?.passwordConfirm !== user?.password)
+  if (user?.confirmPassword !== user?.password)
     return `Password confirmation invalid`;
 
   return null;
