@@ -3,18 +3,21 @@ import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import expReg from '../shared/regex';
 
-let userSchema = new mongoose.Schema({
-  firstname: String,
-  lastname: String,
-  phone: String,
-  email: {
-    type: String,
-    unique: true,
-    required: true,
+let userSchema = new mongoose.Schema(
+  {
+    firstname: String,
+    lastname: String,
+    phone: String,
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    hash: String,
+    salt: String,
   },
-  hash: String,
-  salt: String,
-});
+  { versionKey: false }
+);
 
 userSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString('hex');

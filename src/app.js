@@ -15,7 +15,6 @@ const APP = express();
 APP.use(express.static(path.join(__dirname, '..')));
 APP.use(cors());
 const ROUTER = express.Router();
-console.log(process.env.NODE_ENV, typeof process.env.NODE_ENV);
 if (!process.env.NODE_ENV) throw new Error('Unknown Environment');
 const DATABASE = environment['db'][process.env.NODE_ENV.trim()]['url'];
 const PORT = process.env.PORT;
@@ -25,7 +24,8 @@ mongoose.set('debug', true);
 const db = mongoose.connection;
 db.on('error', () => {});
 db.once('open', () => {});
-APP.use(bodyParser.json({ limit: '50mb' }));
+APP.use(bodyParser.json());
+APP.use(bodyParser.raw());
 APP.use(
   session({
     secret: 'secret',

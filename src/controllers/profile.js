@@ -53,7 +53,26 @@ const load = (req, res) => {
   });
 };
 
-// TODO : Think about better solution
+const updateUser = (req, res) => {
+  let User = mongoose.model('User');
+  let id = req.params.id;
+  let userData = req.body;
+  try {
+    User.findByIdAndUpdate(
+      { _id: new mongoose.Types.ObjectId(id) },
+      userData,
+      { new: true, omitUndefined: true },
+      (error, result) => {
+        if (!error) {
+          res.status(200).send(result);
+        }
+      }
+    );
+  } catch (exp) {
+    res.status(422).send('Error update user');
+  }
+};
+
 const createFilterObject = (filters) => {
   let formatedFilter = {};
   Object.entries(filters).forEach((filter) => {
@@ -64,4 +83,4 @@ const createFilterObject = (filters) => {
   return formatedFilter;
 };
 
-export { me, publish, load };
+export { me, publish, load, updateUser };

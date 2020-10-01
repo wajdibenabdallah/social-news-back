@@ -43,6 +43,10 @@ ROUTER.post('/logout', (req, res) => {
 
 // profile
 
+ROUTER.put('/user/:id', isLoggedIn, (req, res) => {
+  PROFILE.updateUser(req, res);
+});
+
 ROUTER.get('/me', isLoggedIn, (req, res) => {
   PROFILE.me(req, res);
 });

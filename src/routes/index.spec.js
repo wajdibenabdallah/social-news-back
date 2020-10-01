@@ -11,14 +11,15 @@ chai.use(chaiHttp);
 
 let token;
 let agent;
+let id;
 
 describe('API: User/Post', () => {
   const _user = {
       email: 'test1@gmail.com',
       password: 'aaaaaaaa',
-      firstname: 'useruser',
-      lastname: 'useruser',
-      passwordConfirm: 'aaaaaaaa',
+      firstName: 'xxxxxxxx',
+      lastName: 'useruser',
+      confirmPassword: 'aaaaaaaa',
       phone: '+33611762907',
     },
     wrongEmail = 'test2@gmail.com',
@@ -46,7 +47,7 @@ describe('API: User/Post', () => {
     });
   });
 
-  describe('Register, Login, Logout', () => {
+  describe('Model: USER', () => {
     it('it /api/register', (done) => {
       agent
         .post('/api/register')
@@ -54,6 +55,28 @@ describe('API: User/Post', () => {
         .then((data) => {
           expect(data.body).to.have.property('token');
           expect(data.body).to.have.property('user');
+          expect(data.body.user).to.have.property('_id');
+          expect(data.statusCode).to.be.equal(200);
+          id = data.body.user._id;
+          token = data.body.token;
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it('PUT: /api/user', (done) => {
+      let updatedUser = {
+        ..._user,
+        phone: '33611762908',
+        firstname: 'user2',
+      };
+      agent
+        .put(`/api/user/${id}`)
+        .set('content-type', 'application/json')
+        .set('authorization', `Bearer ${token}`)
+        .send(updatedUser)
+        .then((data) => {
+          expect(data.body.phone).to.be.equal(updatedUser.phone);
+          expect(data.body.firstname).to.be.equal(updatedUser.firstname);
           expect(data.statusCode).to.be.equal(200);
           done();
         })
@@ -226,7 +249,8 @@ describe('API: User/Post', () => {
         .catch((error) => done(error));
     });
   });
-  describe('Post', () => {
+
+  describe('Model: POST', () => {
     const _post = {
       title: 'Title',
       text: `aaaaaaaaaaaaaaaaaaaa
