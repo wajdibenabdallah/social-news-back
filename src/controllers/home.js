@@ -4,30 +4,34 @@ import User from '../models/user';
 
 // register
 const register = (req, res) => {
-  let user = new User({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    email: req.body.email,
-    phone: req.body.phone,
-  });
+  try {
+    let user = new User({
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      phone: req.body.phone,
+    });
 
-  // user.isValidPassword();
-  if (!user.passwordIsValid(req.body.password, req.body.confirmPassword)) {
-    res.status(500).json({ error: `Password confirmation invalid` });
-    return;
-  }
-
-  user.setPassword(req.body.password);
-
-  user.save((error) => {
-    if (error) {
-      res.status(500).json({ error: error });
+    if (!user.passwordIsValid(req.body.password, req.body.confirmPassword)) {
+      res.status(500).json({ error: `Password confirmation invalid` });
       return;
     }
-    res.json({
-      token: user.generateJwt(),
+
+    user.setPassword(req.body.password);
+
+    user.save((error) => {
+      if (error) {
+        res.status(500).json({ error: error });
+        return;
+      }
+      res.json({
+        id: user._id,
+        token: user.generateJwt(),
+      });
     });
-  });
+  } catch (exception) {
+    res.status(500).json({ error: `Unknown error` });
+  }
 };
 
 // login

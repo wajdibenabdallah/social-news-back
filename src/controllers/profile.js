@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-// TODO
 import Post from '../models/post';
 import jwt from 'jsonwebtoken';
 import path from 'path';

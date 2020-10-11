@@ -15,15 +15,16 @@ let id;
 
 describe('API: User/Post', () => {
   const _user = {
-      email: 'test1@gmail.com',
-      password: 'aaaaaaaa',
-      firstName: 'xxxxxxxx',
-      lastName: 'useruser',
-      confirmPassword: 'aaaaaaaa',
-      phone: '+33611762907',
-    },
-    wrongEmail = 'test2@gmail.com',
-    wrongPassword = 'test2';
+    email: 'test1@gmail.com',
+    password: 'aaaaaaaa',
+    firstname: 'xxxxxxxx',
+    lastname: 'useruser',
+    confirmPassword: 'aaaaaaaa',
+    phone: '+33611762907',
+  };
+
+  const wrongEmail = 'test2@gmail.com';
+  const wrongPassword = 'test2';
 
   before((done) => {
     agent = chai.request.agent(APP);
@@ -48,16 +49,16 @@ describe('API: User/Post', () => {
   });
 
   describe('Model: USER', () => {
-    it('it /api/register', (done) => {
+    it.only('it /api/register', (done) => {
       agent
         .post('/api/register')
         .send(_user)
         .then((data) => {
+          console.log('data', data.body);
           expect(data.body).to.have.property('token');
-          expect(data.body).to.have.property('user');
-          expect(data.body.user).to.have.property('_id');
+          expect(data.body).to.have.property('id');
           expect(data.statusCode).to.be.equal(200);
-          id = data.body.user._id;
+          id = data.body.id;
           token = data.body.token;
           done();
         })

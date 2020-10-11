@@ -1,5 +1,5 @@
 import express from 'express';
-import * as AUTH from '../controllers/authentication';
+import * as AUTH from '../controllers/home';
 import * as PROFILE from '../controllers/profile';
 import jwt from 'jsonwebtoken';
 import upload from '../config/multer';
