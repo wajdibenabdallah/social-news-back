@@ -13,7 +13,7 @@ let token;
 let agent;
 let id;
 
-describe('API: User/Post', () => {
+describe('API: DevPlatform', () => {
   const _user = {
     email: 'test1@gmail.com',
     password: 'aaaaaaaa',
@@ -158,6 +158,7 @@ describe('API: User/Post', () => {
         })
         .catch((error) => done(error));
     });
+    // User validation
     it('it /api/register: should fail if data are invalid (firstname)', (done) => {
       agent
         .post('/api/register')

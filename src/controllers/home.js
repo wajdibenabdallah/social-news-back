@@ -1,5 +1,4 @@
 import passport from 'passport';
-import mongoose from 'mongoose';
 import User from '../models/user';
 
 // register
@@ -30,30 +29,34 @@ const register = (req, res) => {
       });
     });
   } catch (exception) {
-    res.status(500).json({ error: `Unknown error` });
+    res.status(500).json({ error: `Register: Unknown error` });
   }
 };
 
 // login
 const login = (req, res) => {
-  passport.authenticate('local', (error, user, info) => {
-    if (error) {
-      res.status(404).json(error);
-      return;
-    }
-    if (user) {
-      let token = user.generateJwt();
-      req.login(user, (err) => {
-        if (err) {
-          res.status(500).json({ error: err });
-          return;
-        }
-        res.status(200).json({ token: token });
-      });
-    } else {
-      res.status(401).json({ info: info });
-    }
-  })(req, res);
+  try {
+    passport.authenticate('local', (error, user, info) => {
+      if (error) {
+        res.status(404).json(error);
+        return;
+      }
+      if (user) {
+        let token = user.generateJwt();
+        req.login(user, (err) => {
+          if (err) {
+            res.status(500).json({ error: err });
+            return;
+          }
+          res.status(200).json({ token: token });
+        });
+      } else {
+        res.status(401).json({ info: info });
+      }
+    })(req, res);
+  } catch (exception) {
+    res.status(500).json({ error: `Login: Unknown error` });
+  }
 };
 
 // logout

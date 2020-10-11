@@ -1,7 +1,9 @@
-import mongoose from 'mongoose';
-import Post from '../models/post';
+import { Types } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import User from '../models/user';
+import Post from '../models/post';
+import filterQuery from '../shared/filter.query';
 
 // me
 const me = (req, res) => {
@@ -12,7 +14,6 @@ const me = (req, res) => {
   } catch (e) {
     return res.status(401).send('unauthorized');
   }
-  let User = mongoose.model('User');
   User.findById(id, (error, user) => {
     if (error) {
       res.status(500).send('Error when searching user');
@@ -23,7 +24,6 @@ const me = (req, res) => {
 
 // publish new
 const publish = (req, res) => {
-  let Post = mongoose.model('Post');
   let post = new Post();
 
   let validity = Post.validateData(req.body);
@@ -52,19 +52,19 @@ const publish = (req, res) => {
 
 // load news
 const load = (req, res) => {
-  Post.find(createFilterObject(req.query), (err, data) => {
+  Post.find(filterQuery(req.query), (err, data) => {
     if (err) res.status(500).send('Error');
     res.status(200).send(data);
   });
 };
 
+// update user
 const updateUser = (req, res) => {
-  let User = mongoose.model('User');
   let id = req.params.id;
   let userData = req.body;
   try {
     User.findByIdAndUpdate(
-      { _id: new mongoose.Types.ObjectId(id) },
+      { _id: new Types.ObjectId(id) },
       userData,
       { new: true, omitUndefined: true },
       (error, result) => {
@@ -76,16 +76,6 @@ const updateUser = (req, res) => {
   } catch (exp) {
     res.status(422).send('Error update user');
   }
-};
-
-const createFilterObject = (filters) => {
-  let formatedFilter = {};
-  Object.entries(filters).forEach((filter) => {
-    let key = 'data.' + filter[0];
-    let value = { $regex: `${filter[1]}`, $options: 'i' };
-    formatedFilter[key] = value;
-  });
-  return formatedFilter;
 };
 
 export { me, publish, load, updateUser };
