@@ -1,23 +1,75 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 import expReg from '../shared/regex';
 
-let userSchema = new mongoose.Schema(
+const userSchema = new Schema(
   {
-    firstname: String,
-    lastname: String,
-    phone: String,
+    firstname: {
+      type: String,
+      required: true,
+      validate: {
+        validator: (value) =>
+          expReg.LENGHT(2, 20).test(value) &&
+          !expReg.HAS_SPECIAL_CARACTER.test(value) &&
+          !expReg.HAS_NUMBER.test(value),
+        message: (props) => `${props.value} is not a valid firstname!`,
+      },
+    },
+    lastname: {
+      type: String,
+      required: true,
+      validate: {
+        validator: (value) =>
+          expReg.LENGHT(2, 20).test(value) &&
+          !expReg.HAS_SPECIAL_CARACTER.test(value) &&
+          !expReg.HAS_NUMBER.test(value),
+        message: (props) => `${props.value} is not a valid lastname!`,
+      },
+    },
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: (value) => expReg.IS_PHONE_NUMBER.test(value),
+        message: (props) => `${props.value} is not a valid phone!`,
+      },
+    },
     email: {
       type: String,
       unique: true,
       required: true,
+      validate: {
+        validator: (value) => expReg.IS_EMAIL.test(value),
+        message: (props) => `${props.value} is not a valid email!`,
+      },
     },
-    hash: String,
-    salt: String,
+    emailValid: {
+      type: Boolean,
+      default: false,
+    },
+    phoneValid: {
+      type: Boolean,
+      default: false,
+    },
+    hash: {
+      select: false,
+      type: String,
+    },
+    salt: {
+      select: false,
+      type: String,
+    },
   },
-  { versionKey: false }
+  {
+    versionKey: false,
+  }
 );
+
+userSchema.methods.passwordIsValid = (password, confirmPassword) => {
+  return confirmPassword === password;
+};
 
 userSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString('hex');
@@ -39,7 +91,7 @@ userSchema.methods.generateJwt = function () {
 
   return jwt.sign(
     {
-      _id: this._id,
+      id: this._id,
       email: this.email,
       firstname: this.firstname,
       lastname: this.lastname,
@@ -50,29 +102,6 @@ userSchema.methods.generateJwt = function () {
   );
 };
 
-userSchema.methods.validateData = (user) => {
-  if (
-    !user.firstName ||
-    expReg.HAS_SPECIAL_CARACTER.test(user.firstName) ||
-    user.firstName?.length > 20 ||
-    user.firstName?.length < 5
-  )
-    return `Firstname invalid`;
-  if (
-    !user.lastName ||
-    expReg.HAS_SPECIAL_CARACTER.test(user.lastName) ||
-    user.lastName?.length > 20 ||
-    user.lastName?.length < 5
-  )
-    return `Lastname invalid`;
-  if (!user.email || !expReg.IS_EMAIL.test(user.email)) return `Email invalid`;
-  if (!user.phone || !expReg.IS_PHONE_NUMBER.test(user.phone))
-    return `Phone invalid`;
-  if (!user.password || user.password?.length < 8) return `Password invalid`;
-  if (user?.confirmPassword !== user?.password)
-    return `Password confirmation invalid`;
+const User = model('User', userSchema);
 
-  return null;
-};
-
-export default mongoose.model('User', userSchema);
+export default User;

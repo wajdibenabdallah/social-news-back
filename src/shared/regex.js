@@ -4,6 +4,10 @@ const expReg = {
   HAS_SPECIAL_CARACTER: /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\?|\/|\"|\;|\:/,
   HAS_NUMBER: /\d/,
   IS_VALID_IMAGE: /^(.*\.(?!(jpg|png|jpeg)$))?[^.]*$/i,
+  LENGHT: (min, max) => {
+    let expR = `^.{${min},${max}}$`;
+    return new RegExp(expR);
+  },
 };
 
 export default expReg;
@@ -12,7 +16,7 @@ export default expReg;
 // Rules
 /*
   // USER
-  Firstname and Lastname should contains between 5 and 20 characters and no numeric special characters or numeric
+  Firstname and Lastname should contains between 2 and 20 characters and no numeric special characters or numeric
   Email Number Should be matched with the required form
   Phone Number Should be matched with the required form
   Password should contains at least 8 characters

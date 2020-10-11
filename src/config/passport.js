@@ -1,13 +1,13 @@
 import { Strategy } from 'passport-local';
 import User from '../models/user';
 
-export default function(passport) {
-  passport.serializeUser(function(user, done) {
+export default function (passport) {
+  passport.serializeUser(function (user, done) {
     done(null, user.email);
   });
 
-  passport.deserializeUser(function(email, done) {
-    User.find({ email: email }, function(err, user) {
+  passport.deserializeUser(function (email, done) {
+    User.find({ email: email }, function (err, user) {
       done(err, user);
     });
   });

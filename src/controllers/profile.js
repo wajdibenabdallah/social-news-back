@@ -7,13 +7,19 @@ import path from 'path';
 // me
 const me = (req, res) => {
   let token = req.headers.authorization.split(' ')[1];
-  let user;
+  let id;
   try {
-    user = jwt.verify(token, process.env.SECRET);
+    id = jwt.verify(token, process.env.SECRET)._id;
   } catch (e) {
     return res.status(401).send('unauthorized');
   }
-  res.status(200).send(user);
+  let User = mongoose.model('User');
+  User.findById(id, (error, user) => {
+    if (error) {
+      res.status(500).send('Error when searching user');
+    }
+    res.status(200).send(user);
+  });
 };
 
 // publish new

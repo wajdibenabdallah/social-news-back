@@ -1,31 +1,31 @@
 import passport from 'passport';
 import mongoose from 'mongoose';
+import User from '../models/user';
 
 // register
 const register = (req, res) => {
-  let User = mongoose.model('User');
-  let user = new User();
+  let user = new User({
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    phone: req.body.phone,
+  });
 
-  let validity = user.validateData(req.body);
-
-  if (validity) {
-    res.status(422).json({ message: validity });
+  // user.isValidPassword();
+  if (!user.passwordIsValid(req.body.password, req.body.confirmPassword)) {
+    res.status(500).json({ error: `Password confirmation invalid` });
     return;
   }
 
-  user.email = req.body.email;
   user.setPassword(req.body.password);
-  user.firstname = req.body.firstName;
-  user.lastname = req.body.lastName;
-  user.phone = req.body.phone;
-  user.save((err) => {
-    if (err) {
-      res.status(500).json({ error: err });
+
+  user.save((error) => {
+    if (error) {
+      res.status(500).json({ error: error });
       return;
     }
     res.json({
       token: user.generateJwt(),
-      user: user,
     });
   });
 };
