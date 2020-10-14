@@ -7,10 +7,10 @@ import filterQuery from '../shared/filter.query';
 
 // me
 const me = (req, res) => {
-  let token = req.headers.authorization.split(' ')[1];
   let id;
   try {
-    id = jwt.verify(token, process.env.SECRET)._id;
+    let token = req.headers.authorization.split(' ')[1];
+    id = jwt.verify(token, process.env.SECRET).id;
   } catch (e) {
     return res.status(401).send('unauthorized');
   }

@@ -49,6 +49,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    emailToken: {
+      type: String,
+      unique: true,
+    },
     phoneValid: {
       type: Boolean,
       default: false,

@@ -5,10 +5,11 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import api from './routes';
 import config_passport from './config/passport';
-import { environment } from './config/environment';
+import environment from './config/environment';
 import session from 'express-session';
 import cors from 'cors';
 import path from 'path';
+import ses from './aws/ses';
 
 dotenv.config();
 const APP = express();
@@ -37,7 +38,9 @@ APP.use(passport.initialize());
 APP.use(passport.session());
 config_passport(passport);
 ROUTER.use('/api', api);
+ROUTER.use('/aws', ses);
 APP.use(ROUTER);
+
 APP.listen(PORT, () => {
   console.info(`\nServer is running`);
   console.info(`\tPORT : ${PORT}`);
