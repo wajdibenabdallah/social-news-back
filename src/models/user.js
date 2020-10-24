@@ -58,11 +58,14 @@ const userSchema = new Schema(
       default: false,
     },
     hash: {
-      select: false,
+      select: true,
       type: String,
     },
     salt: {
-      select: false,
+      select: true,
+      type: String,
+    },
+    bio: {
       type: String,
     },
   },

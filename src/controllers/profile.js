@@ -18,7 +18,9 @@ const me = (req, res) => {
     if (error) {
       res.status(500).send('Error when searching user');
     }
-    res.status(200).send(user);
+    user._doc['id'] = user._doc['_id'];
+    delete user._doc['_id'];
+    res.status(200).send(user._doc);
   });
 };
 

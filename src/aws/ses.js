@@ -26,15 +26,15 @@ ROUTER.get('/verify', (req, res) => {
         res.status(500).send(error);
       }
       if (user) {
-        res.status(200).send('user updated successfully');
+        res.status(200).send({ message: 'user updated successfully' });
       } else {
-        res.status(422).send('user not found');
+        res.status(422).send({ message: 'user not found' });
       }
     }
   );
 });
 
-ROUTER.get('/send', (req, res) => {
+ROUTER.post('/send', (req, res) => {
   try {
     let token = req.headers.authorization.split(' ')[1];
     let currentUser = jwt.verify(token, process.env.SECRET);
@@ -46,7 +46,7 @@ ROUTER.get('/send', (req, res) => {
       {
         Source: `wajdibabdallah@gmail.com`,
         Destination: {
-          ToAddresses: [`wajdibabdallah@gmail.com`],
+          ToAddresses: [currentUser.email],
         },
         Message: {
           Subject: {

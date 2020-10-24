@@ -12,7 +12,7 @@ const environment = {
   },
   app: {
     dev: {
-      url: 'http://localhost:4000',
+      url: 'http://localhost:4200',
     },
     test: {
       url: 'mongodb://localhost:27017/dev_paltform_test',
