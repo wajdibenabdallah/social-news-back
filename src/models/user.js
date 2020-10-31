@@ -51,21 +51,26 @@ const userSchema = new Schema(
     },
     emailToken: {
       type: String,
-      unique: true,
     },
     phoneValid: {
       type: Boolean,
       default: false,
     },
-    hash: {
-      select: true,
-      type: String,
-    },
-    salt: {
-      select: true,
-      type: String,
+    password: {
+      salt: {
+        type: String,
+      },
+      hash: {
+        type: String,
+      },
     },
     bio: {
+      type: String,
+    },
+    birthday: {
+      type: Date,
+    },
+    avatar: {
       type: String,
     },
   },
@@ -79,16 +84,18 @@ userSchema.methods.passwordIsValid = (password, confirmPassword) => {
 };
 
 userSchema.methods.setPassword = function (password) {
-  this.salt = crypto.randomBytes(16).toString('hex');
-  this.hash = crypto
-    .pbkdf2Sync(password, this.salt, 1000, 64, 'sha512')
+  this.password.salt = crypto.randomBytes(16).toString('hex');
+  this.password.hash = crypto
+    .pbkdf2Sync(password, this.password.salt, 1000, 64, 'sha512')
     .toString('hex');
 };
 
 userSchema.methods.validPassword = function (password) {
   return (
-    this.hash ===
-    crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex')
+    this.password.hash ===
+    crypto
+      .pbkdf2Sync(password, this.password.salt, 1000, 64, 'sha512')
+      .toString('hex')
   );
 };
 

@@ -1,5 +1,6 @@
 import passport from 'passport';
 import User from '../models/user';
+import getErrorDbMessage from '../shared/error';
 
 // register
 const register = (req, res) => {
@@ -20,7 +21,7 @@ const register = (req, res) => {
 
     user.save((error) => {
       if (error) {
-        res.status(500).json({ error: error });
+        res.status(500).json({ message: getErrorDbMessage(error) });
         return;
       }
       res.json({
@@ -28,7 +29,7 @@ const register = (req, res) => {
         token: user.generateJwt(),
       });
     });
-  } catch (exception) {
+  } catch (e) {
     res.status(500).json({ error: `Register: Unknown error` });
   }
 };

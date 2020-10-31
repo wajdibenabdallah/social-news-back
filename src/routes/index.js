@@ -24,39 +24,47 @@ const isLoggedIn = (req, res, next) => {
   );
 };
 
-// authentication
+// * * * * * home * * * * *
 
+// use Test API
 ROUTER.use('/test', (req, res) => {
   res.status(200).send({ result: true });
 });
 
+// post Login User
 ROUTER.post('/login', (req, res) => {
   AUTH.login(req, res);
 });
 
+// post New User
 ROUTER.post('/register', (req, res) => {
   AUTH.register(req, res);
 });
 
+// post Logout User
 ROUTER.post('/logout', (req, res) => {
   AUTH.logout(req, res);
 });
 
-// profile
+// * * * * * profile * * * * *
 
-ROUTER.put('/user/:id', isLoggedIn, (req, res) => {
-  PROFILE.updateUser(req, res);
-});
-
+// get Current User
 ROUTER.get('/me', isLoggedIn, (req, res) => {
   PROFILE.me(req, res);
 });
 
-ROUTER.get('/post', isLoggedIn, (req, res) => {
+// update User
+ROUTER.put('/user/:id', isLoggedIn, (req, res) => {
+  PROFILE.updateUser(req, res);
+});
+
+// get Publication
+ROUTER.get('/publication', isLoggedIn, (req, res) => {
   PROFILE.load(req, res);
 });
 
-ROUTER.post('/post', isLoggedIn, upload.single('image'), (req, res) => {
+// post Publication
+ROUTER.post('/publication', isLoggedIn, upload.single('image'), (req, res) => {
   PROFILE.publish(req, res);
 });
 
