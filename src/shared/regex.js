@@ -4,8 +4,9 @@ const expReg = {
   HAS_SPECIAL_CARACTER: /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\?|\/|\"|\;|\:/,
   HAS_NUMBER: /\d/,
   IS_VALID_IMAGE: /^(.*\.(?!(jpg|png|jpeg)$))?[^.]*$/i,
-  LENGHT: (min, max) => {
+  LENGHT: (min = '', max = '') => {
     let expR = `^.{${min},${max}}$`;
+    console.log(expR);
     return new RegExp(expR);
   },
 };
@@ -20,7 +21,7 @@ export default expReg;
   Email Number Should be matched with the required form
   Phone Number Should be matched with the required form
   Password should contains at least 8 characters
-  // POST
+  // PUBLICATION
   Title shouldn't be empty
   Text Should contains at least 50 characters
 */

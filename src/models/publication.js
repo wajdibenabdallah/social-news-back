@@ -12,7 +12,7 @@ const Publication = mongoose.model(
       type: String,
       required: true,
       validate: {
-        validator: (value) => expReg.LENGHT(1, 30).test(value),
+        validator: (value) => expReg.LENGHT(1, 100).test(value),
         message: (props) => `${props.value} is not a valid title!`,
       },
     },

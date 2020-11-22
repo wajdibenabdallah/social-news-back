@@ -54,7 +54,7 @@ ROUTER.get('/me', isLoggedIn, (req, res) => {
 });
 
 // update User
-ROUTER.put('/user/:id', isLoggedIn, (req, res) => {
+ROUTER.put('/user/:id', isLoggedIn, upload.single('userImage'), (req, res) => {
   PROFILE.updateUser(req, res);
 });
 
@@ -64,8 +64,13 @@ ROUTER.get('/publication', isLoggedIn, (req, res) => {
 });
 
 // post Publication
-ROUTER.post('/publication', isLoggedIn, upload.single('image'), (req, res) => {
-  PROFILE.publish(req, res);
-});
+ROUTER.post(
+  '/publication',
+  isLoggedIn,
+  upload.single('publicationImage'),
+  (req, res) => {
+    PROFILE.publish(req, res);
+  }
+);
 
 export default ROUTER;

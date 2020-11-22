@@ -54,7 +54,6 @@ describe('API: DevPlatform', () => {
         .post('/api/register')
         .send(_user)
         .then((data) => {
-          console.log('data', data.body);
           expect(data.body).to.have.property('token');
           expect(data.body).to.have.property('id');
           expect(data.statusCode).to.be.equal(200);

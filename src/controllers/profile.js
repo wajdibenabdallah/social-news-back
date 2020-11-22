@@ -4,6 +4,7 @@ import path from 'path';
 import User from '../models/user';
 import Post from '../models/publication';
 import filterQuery from '../shared/filter.query';
+import Publication from '../models/publication';
 
 // me
 const me = (req, res) => {
@@ -30,7 +31,7 @@ const me = (req, res) => {
 // publish new
 const publish = (req, res) => {
   try {
-    let post = new Post({
+    let publication = new Publication({
       title: req.body.title,
       text: req.body.text,
       imageUri: req.file
@@ -38,12 +39,12 @@ const publish = (req, res) => {
         : '',
     });
 
-    post.save((err) => {
+    publication.save((err) => {
       if (err) {
         res.status(500).json({ error: err });
         return;
       }
-      res.status(200).json({ success: true, post: post });
+      res.status(200).json({ success: true, publication: publication });
     });
   } catch (e) {
     res.status(500).json({ error: `Publish: Unknown error` });
@@ -75,9 +76,9 @@ const updateUser = (req, res) => {
         if (error) {
           res.status(500).send(error);
         }
-        res.status(200).send(`user has been updated successfully`);
+        res.status(200).send(user);
       }
-    );
+    ).select('-password');
   } catch (e) {
     res.status(500).json({ error: `updateUser: Unknown error` });
   }

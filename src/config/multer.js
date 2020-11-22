@@ -2,12 +2,19 @@ import multer from 'multer';
 import fileExtension from 'file-extension';
 
 const storage = multer.diskStorage({
-  // Setting directory on disk to save uploaded files
-  destination: function (req, file, cb) {
-    cb(null, 'public/storage/publications');
+  destination: (req, file, cb) => {
+    switch (file.fieldname) {
+      case 'userImage':
+        cb(null, 'public/storage/user');
+        break;
+      case 'publicationImage':
+        cb(null, 'public/storage/publication');
+        break;
+      default:
+        cb(null, 'public/storage');
+    }
   },
 
-  // Setting name of file saved
   filename: function (req, file, cb) {
     cb(
       null,
@@ -19,15 +26,12 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    // Setting Image Size Limit to 10MBs
     fileSize: 10000000,
   },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      //Error
       cb(new Error('Please upload JPG and PNG images only!'));
     }
-    //Success
     cb(undefined, true);
   },
 });
