@@ -17,8 +17,8 @@ rules:
     - error
     - windows
   quotes:
-    - error
-    - single
+    - warning
+    - double
   semi:
     - error
     - always
